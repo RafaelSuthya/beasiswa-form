@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Program Beasiswa - Hitung Rata-rata Nilai</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+
+    h2 {
+      color: #2c3e50;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="number"] {
+      width: 80px;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .hasil {
+      margin-top: 30px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Program Beasiswa - Hitung Rata-rata Nilai</h2>
+
+  <form id="formNilai">
+    <label>Nama Calon Mahasiswa: <input type="text" id="namaMahasiswa" required></label>
+    <fieldset>
+      <legend>Bahasa Indonesia</legend>
+      <label>Kelas 10 Semester 1: <input type="number" id="bindo10smt1" required></label>
+      <label>Kelas 10 Semester 2: <input type="number" id="bindo10smt2" required></label>
+      <label>Kelas 11 Semester 1: <input type="number" id="bindo11smt1" required></label>
+      <label>Kelas 11 Semester 2: <input type="number" id="bindo11smt2" required></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Bahasa Inggris</legend>
+      <label>Kelas 10 Semester 1: <input type="number" id="bing10smt1" required></label>
+      <label>Kelas 10 Semester 2: <input type="number" id="bing10smt2" required></label>
+      <label>Kelas 11 Semester 1: <input type="number" id="bing11smt1" required></label>
+      <label>Kelas 11 Semester 2: <input type="number" id="bing11smt2" required></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Matematika</legend>
+      <label>Kelas 10 Semester 1: <input type="number" id="mat10smt1" required></label>
+      <label>Kelas 10 Semester 2: <input type="number" id="mat10smt2" required></label>
+      <label>Kelas 11 Semester 1: <input type="number" id="mat11smt1" required></label>
+      <label>Kelas 11 Semester 2: <input type="number" id="mat11smt2" required></label>
+    </fieldset>
+
+    <button type="button" onclick="hitungRataRata()">Hitung Rata-rata</button>
+    <button type="button" onclick="window.location.href='daftar_mahasiswa.html'">Lihat Semua</button>
+  </form>
+
+  <div class="hasil" id="hasilRataRata"></div>
+
+  <script>
+    function hitungRataRata() {
+      const getVal = id => parseFloat(document.getElementById(id).value) || 0;
+      const nama = document.getElementById("namaMahasiswa").value.trim();
+
+      let bindo = getVal("bindo10smt1") + getVal("bindo10smt2") + getVal("bindo11smt1") + getVal("bindo11smt2");
+      let bing = getVal("bing10smt1") + getVal("bing10smt2") + getVal("bing11smt1") + getVal("bing11smt2");
+      let mat  = getVal("mat10smt1") + getVal("mat10smt2") + getVal("mat11smt1") + getVal("mat11smt2");
+
+      let rataBindo = (bindo / 4).toFixed(2);
+      let rataBing = (bing / 4).toFixed(2);
+      let rataMat = (mat / 4).toFixed(2);
+
+      const hasil = `
+        <p>Rata-rata Bahasa Indonesia: <strong>${rataBindo}</strong></p>
+        <p>Rata-rata Bahasa Inggris: <strong>${rataBing}</strong></p>
+        <p>Rata-rata Matematika: <strong>${rataMat}</strong></p>
+      `;
+      document.getElementById("hasilRataRata").innerHTML = hasil;
+
+      // Simpan ke localStorage
+      if (nama) {
+        let data = JSON.parse(localStorage.getItem("mahasiswaBeasiswa") || "[]");
+        data.push({
+          nama: nama,
+          rataBindo: rataBindo,
+          rataBing: rataBing,
+          rataMat: rataMat
+        });
+        localStorage.setItem("mahasiswaBeasiswa", JSON.stringify(data));
+      }
+    }
+  </script>
+
+</body>
+</html>
