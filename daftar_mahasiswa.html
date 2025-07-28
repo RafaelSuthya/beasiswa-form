@@ -32,6 +32,8 @@
     <tbody id="daftarMahasiswa"></tbody>
   </table>
   <button onclick="window.location.href='beasiswa.html'">Kembali</button>
+  <button type="button" onclick="downloadExcel()">Download Excel</button>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script>
     function renderTable() {
       const data = JSON.parse(localStorage.getItem("mahasiswaBeasiswa") || "[]");
@@ -50,6 +52,29 @@
           </tr>
         `).join('');
       }
+    }
+
+    function downloadExcel() {
+      const data = JSON.parse(localStorage.getItem("mahasiswaBeasiswa") || "[]");
+      if (data.length === 0) {
+        alert("Belum ada data untuk diunduh.");
+        return;
+      }
+      // Prepare data for Excel
+      const wsData = [
+        ["No", "Nama", "Rata-rata Bahasa Indonesia", "Rata-rata Bahasa Inggris", "Rata-rata Matematika"],
+        ...data.map((mhs, idx) => [
+          idx + 1,
+          mhs.nama,
+          mhs.rataBindo,
+          mhs.rataBing,
+          mhs.rataMat
+        ])
+      ];
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Daftar Mahasiswa");
+      XLSX.writeFile(wb, "daftar_mahasiswa.xlsx");
     }
 
     function hapusMahasiswa(index) {
